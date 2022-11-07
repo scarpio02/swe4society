@@ -1,13 +1,21 @@
 const express = require("express");
 const app = express();
 const cors = require("cors");
+const jwt = require("jsonwebtoken")
+const bcrypt = require("bcrypt")
+const User = require("./models/user");
+const bodyParser = require("body-parser")
+const mongoose = require("mongoose")
+
 require("dotenv").config({ path: "./config.env" });
 const port = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
+app.use(express.urlencoded({ extended: false}));
 app.use(require("./routes/record"));
+
 // get driver connection
-// THis is previous DB Connection
+// This is previous DB Connection
 
 // const dbo = require("./db/conn");
  
@@ -20,8 +28,6 @@ app.use(require("./routes/record"));
 //   console.log(`Server is running on port: ${port}`);
 // });
 
-const bodyParser = require("body-parser")
-const mongoose = require("mongoose")
 
 const urlencodedParser = bodyParser.urlencoded({ extended: false })
 const jsonParser = bodyParser.json();
@@ -35,28 +41,22 @@ mongoose.connect(Db, { useNewUrlParser:true, useUnifiedTopology:true })
   })
 .catch(err => console.log(err))
 
-
-const jwt = require("jsonwebtoken")
-const bcrypt = require("bcrypt")
-const User = require("./models/user");
-
 app.post("/register", async (req, res) => {
   const user = req.body;
-
   console.log(req.body);
+
   // check if the username or email has been taken by another user already
   const takenUsername = await User.findOne({username: user.username})
-  const takenEmail = await User.findOne({email: user.email})
 
-  if (takenUsername || takenEmail) {
+  if (takenUsername) {
     res.json({message: "Username or email has already been taken"})
   } else {
-    user.password = await bcrypt.hash(req.body.password, 10)
+    console.log('password is: ${req.body.password}');
+    user.password = await bcrypt.hash(req.body.password.toString(), 10)
 
     const dbUser = new User({
-      username: user.username.toLowerCase(),
-      email: user.email.toLowerCase(),
-      password: user.password
+      username: user.username.toString().toLowerCase(),
+      password: user.password.toString()
     })
 
     dbUser.save()
@@ -68,14 +68,17 @@ app.post("/login", (req, res) => {
     
   const userLoggingIn = req.body;
 
-  User.findOne({username: userLoggingIn.username})
+  const username = userLoggingIn.username.toString();
+  const password = userLoggingIn.password.toString();
+
+  User.findOne({username: username})
   .then(dbUser => {
     if (!dbUser) {
       return res.json({
         message: "Invalid Username or Password"
       })
     }
-    bcrypt.compare(userLoggingIn.password, dbUser.password)
+    bcrypt.compare(password, dbUser.password)
     .then(isCorrect => {
       if (isCorrect) {
         const payload = {
@@ -87,7 +90,10 @@ app.post("/login", (req, res) => {
           process.env.JWT_SECRET,
           {expiresIn: 86400},
           (err, token) => {
-            if (err) return res.json({message: err})
+            if (err) {
+              console.log('err is: ${err}');
+              return res.json({message: err})
+            }
             return res.json({
               message: "Success",
               token: "Bearer " + token
