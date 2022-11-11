@@ -1,8 +1,10 @@
 import { useNavigate } from 'react-router'
-import { useEffect } from 'react'
+import { useState, useEffect } from 'react'
 
 export function Register() {
     const history = useNavigate()
+    const [successfullyRegistered, setSuccessfullyRegistered] = useState(false);
+    const [registrationFailed, setRegistrationFailed] = useState(false);
 
     async function handleRegister(e) {
         e.preventDefault()
@@ -13,12 +15,28 @@ export function Register() {
             password: form[1].value,
         }
 
-        fetch("/register", {
+        fetch("http://localhost:5000/register", {
             method: "POST",
             headers: {
                 "Content-type": "application/json"
             },
             body: JSON.stringify(user)
+        }).then((response) => {
+            return response.json();
+        }).then(result => {
+            console.log(result);
+            if (result.message === "Success") {
+                setSuccessfullyRegistered(true);
+                setRegistrationFailed(false);
+                form[0].value = "";
+                form[1].value = "";
+            }
+            else {
+                setSuccessfullyRegistered(false);
+                setRegistrationFailed(true);
+                form[0].value = "";
+                form[1].value = "";
+            }
         })
     }
 
@@ -34,9 +52,21 @@ export function Register() {
 
     return (
         <form onSubmit={event => handleRegister(event)}>
-            <input required type="email"/>
+            <input required type="text"/>
             <input required type="password"/>
             <input type="submit" value="Submit"/>
+            {successfullyRegistered &&
+                <p>
+                You registered!
+                </p> 
+            }
+            {registrationFailed &&
+                <p>
+                Username has already been taken.
+                </p> 
+            }
         </form>
     )
 }
+
+export default Register;
