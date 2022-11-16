@@ -17,11 +17,37 @@ const params = {
 //const api_url = `https://api.nal.usda.gov/fdc/v1/foods/search?query=apple&pageSize=2&api_key=adGOkaniwDcX5OGdQwBKtAG4NnaCknGEsJrpcCX5`
 const api_url = `https://api.nal.usda.gov/fdc/v1/foods/search?query=${encodeURIComponent(params.query)}&pageSize=${encodeURIComponent(params.pagesize)}&api_key=${encodeURIComponent(params.api_key)}`
 
-function getData() {
-	return fetch(api_url).then(response => response.json())
+async function getData() {
+	let info =  await fetch(api_url).then(response => response.json())
+	return info
 }
+var info = await getData().then(data => {return (data).foods} )
+var nutritionInfo = await getData().then(data => {return (data).foods} )
+//console.log(nutritionInfo[0].foodNutrients)
 
-getData().then(data => console.log(data))//.foods[0].foodNutrients))
+var resultsMap = new Map()
+var nutritionDict = []
+//console.log(Object.keys(info).length)
+//console.log(typeof nutritionInfo[0])
+
+for(let i = 0; i < Object.keys(info).length; i++)
+{
+	var nutrients = nutritionInfo[i].foodNutrients
+	//console.log(nutrients)
+	for(let j = 0; j < 10; j++)
+	{
+		//console.log(nutrients[j])
+		nutritionDict.push({Nutrient : nutrients[j].nutrientName, Grams :  nutrients[j].value})
+	}
+	//console.log(nutritionDict)
+	//console.log(info[i].description)
+	console.log(nutritionDict)
+	resultsMap.set({Name : info[i].description, Nutrients: nutritionDict})
+	//console.log(resultsMap)
+	nutritionDict.length = 0
+}
+console.log(resultsMap)
+//console.log(resultsMap.values())
 
 //Stripping the brand name when searching for alts (can do 2 text boxes)
 //Parsing out specific nutrients
