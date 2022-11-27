@@ -51,9 +51,8 @@ app.post("/register", async (req, res) => {
   if (takenUsername) {
     res.json({message: "Username or email has already been taken"})
   } else {
-    console.log('password is: ${req.body.password}');
+    console.log("password is: ", req.body.password);
     user.password = await bcrypt.hash(req.body.password.toString(), 10)
-
     const dbUser = new User({
       username: user.username.toString().toLowerCase(),
       password: user.password.toString()
@@ -68,17 +67,19 @@ app.post("/login", (req, res) => {
     
   const userLoggingIn = req.body;
 
+  if (!userLoggingIn) return res.json({message: "Server Error"})
+
   const username = userLoggingIn.username.toString();
   const password = userLoggingIn.password.toString();
 
-  User.findOne({username: username})
+  User.findOne({username: userLoggingIn.username.toLowerCase()})
   .then(dbUser => {
     if (!dbUser) {
       return res.json({
         message: "Invalid Username or Password"
       })
     }
-    bcrypt.compare(password, dbUser.password)
+    bcrypt.compare(userLoggingIn.password, dbUser.password)
     .then(isCorrect => {
       if (isCorrect) {
         const payload = {
@@ -90,10 +91,10 @@ app.post("/login", (req, res) => {
           process.env.JWT_SECRET,
           {expiresIn: 86400},
           (err, token) => {
-            if (err) {
-              console.log('err is: ${err}');
-              return res.json({message: err})
-            }
+            // if (err) {
+            //   console.log('err is: ${err}');
+            //   return res.json({message: err})
+            // }
             return res.json({
               message: "Success",
               token: "Bearer " + token
@@ -110,7 +111,7 @@ app.post("/login", (req, res) => {
 })
 
 function verifyJWT(req, res, next) {
-  const token = req.headers["x-access-toke"]?.split(' ')[1]
+  const token = req.headers["x-access-token"]?.split(' ')[1]
 
   if (token) {
     jwt.verify(token, process.env.PASSPORTSECRET, (err, decoded) => {
