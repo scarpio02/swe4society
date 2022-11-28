@@ -6,8 +6,25 @@ import "bootstrap/dist/css/bootstrap.css";
 // We import NavLink to utilize the react router.
 import { NavLink } from "react-router-dom";
  
+import { useLayoutEffect, useState, useEffect } from 'react'
+
 // Here, we display our Navbar
 export default function Navbar() {
+
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useLayoutEffect(() => {
+    fetch("http://localhost:5000/isUserAuth", {
+        method:"POST",
+        headers: {
+            "Content-type": "application/json",
+            "x-access-token": localStorage.getItem("token")
+        }
+    })
+    .then(res => res.json())
+    .then(data => data.isLoggedIn ? setIsLoggedIn(true): null)
+}, )
+
  return (
    <div>
      <nav className="navbar navbar-expand-lg navbar-light bg-light">
@@ -29,12 +46,12 @@ export default function Navbar() {
        <div className="collapse navbar-collapse" id="navbarSupportedContent">
          <ul className="navbar-nav ml-auto">
            <li className="nav-item">
-             <NavLink className="nav-link" to="/register">
+             {isLoggedIn && <NavLink className="nav-link" to="/register">
                Register
-             </NavLink>
-             <NavLink className="nav-link" to="/login">
+             </NavLink>}
+             {isLoggedIn && <NavLink className="nav-link" to="/login">
                Login
-             </NavLink>
+             </NavLink>}
            </li>
          </ul>
        </div>

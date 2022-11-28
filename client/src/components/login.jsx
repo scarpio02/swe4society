@@ -3,11 +3,11 @@ import { useLayoutEffect, useState, useEffect } from 'react'
 import {Link, Navigate} from 'react-router-dom';
 import ValidationError from './ValidationError'
 
-export function Login() {
+function Login() {
     const history = useNavigate()
     // const [successfullyLoggedIn, setSuccessfullyLoggedIn] = useState(false);
     // const [loginFailed, setLoginFailed] = useState(false);
-    const [errorMessage, setErrorMessage] = useState("")
+    const [errorMessage, setErrorMessage] = useState("");
 
     async function handleLogin(e) {
         e.preventDefault()
@@ -19,6 +19,7 @@ export function Login() {
         }
 
         try {
+            console.log(user.username);
             const res = await fetch("http://localhost:5000/login", {
                 method: "POST",
                 headers: {
@@ -28,6 +29,7 @@ export function Login() {
             })
             const data = await res.json()
             localStorage.setItem("token", data.token)
+            console.log(localStorage.getItem("token"));
             setErrorMessage(data.message)
         } catch(err) {
             setErrorMessage(err)
@@ -63,14 +65,17 @@ export function Login() {
     // }
 
     useLayoutEffect(() => {
-        fetch("/isUserAuth", {
+        fetch("http://localhost:5000/isUserAuth", {
             headers: {
                 "x-access-token": localStorage.getItem("token")
             }
         })
         .then(res => res.json())
         .then(data => data.isLoggedIn ? history.push("/dashboard"): null)
-        .catch(err => setErrorMessage(err))
+        .catch(err => {
+            console.log(`${err}`);
+            setErrorMessage(err);
+        })
     }, [history])
 
     return (
@@ -85,9 +90,13 @@ export function Login() {
                 <div className="flex flex-row items-center justify-center">
                     <h1>Don't have an account?</h1>
                     <Link className="m-1 px-2 py-1 rounded font-bold text-xl border-2 border-green-400 text-green-400 text-center" to="/register">Register</Link>
-                </div>            </form>
-            {errorMessage === "Success" ? <Navigate to="/"/>: <ValidationError message={errorMessage} />}
+                </div>  
+                          </form>
+                
+            
         </div>
+
+        //{errorMessage === "Success" ? <Navigate to="/"/>: <ValidationError message={errorMessage} />}
 
         // <form onSubmit={event => handleLogin(event)}>
         //     <input required type="text"/>

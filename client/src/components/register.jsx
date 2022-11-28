@@ -60,13 +60,15 @@ export function Register() {
     // }
 
     useLayoutEffect(() => {
-        fetch("/isUserAuth", {
+        fetch("http://localhost:5000/isUserAuth", {
+            method:"POST",
             headers: {
+                "Content-type": "application/json",
                 "x-access-token": localStorage.getItem("token")
             }
         })
         .then(res => res.json())
-        .then(data => data.isLoggedIn ? history.push("/dashboard"): null)
+        .then(data => data.isLoggedIn ? history("/"): null)
     }, [history])
 
     return (

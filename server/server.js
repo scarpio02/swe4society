@@ -35,6 +35,13 @@ const jsonParser = bodyParser.json();
 // app.use(urlencodedParser);
 const Db = process.env.ATLAS_URI;
 
+
+
+app.post("/isUserAuth", verifyJWT, (req, res) => {
+  console.log("user auth is working");
+  return res.json({isLoggedIn: true, username: req.user.username})
+})
+
 mongoose.connect(Db, { useNewUrlParser:true, useUnifiedTopology:true })
 .then((res) => {
   app.listen(process.env.PORT, () => console.log("Server is live"))
@@ -72,53 +79,61 @@ app.post("/login", (req, res) => {
   const username = userLoggingIn.username.toString();
   const password = userLoggingIn.password.toString();
 
-  User.findOne({username: userLoggingIn.username.toLowerCase()})
-  .then(dbUser => {
-    if (!dbUser) {
-      return res.json({
-        message: "Invalid Username or Password"
-      })
-    }
-    bcrypt.compare(userLoggingIn.password, dbUser.password)
-    .then(isCorrect => {
-      if (isCorrect) {
-        const payload = {
-          id: dbUser._id,
-          username: dbUser.username,
-        }
-        jwt.sign(
-          payload,
-          process.env.JWT_SECRET,
-          {expiresIn: 86400},
-          (err, token) => {
-            // if (err) {
-            //   console.log('err is: ${err}');
-            //   return res.json({message: err})
-            // }
-            return res.json({
-              message: "Success",
-              token: "Bearer " + token
-            })
-          }
-        )
-      } else {
+    User.findOne({username: userLoggingIn.username.toLowerCase()})
+    .then(dbUser => {
+      if (!dbUser) {
         return res.json({
           message: "Invalid Username or Password"
         })
       }
+      bcrypt.compare(userLoggingIn.password, dbUser.password)
+      .then(isCorrect => {
+        if (isCorrect) {
+          const payload = {
+            id: dbUser._id,
+            username: dbUser.username,
+          }
+          jwt.sign(
+            payload,
+            process.env.JWT_SECRET,
+            {expiresIn: 86400},
+            (err, token) => {
+              // if (err) {
+              //   console.log('err is: ${err}');
+              //   return res.json({message: err})
+              // }
+              return res.json({
+                message: "Success",
+                token: "Bearer " + token
+              })
+            }
+          )
+        } else {
+          return res.json({
+            message: "Invalid Username or Password"
+          })
+        }
+      })
     })
-  })
-})
+  }
+)
 
 function verifyJWT(req, res, next) {
   const token = req.headers["x-access-token"]?.split(' ')[1]
 
   if (token) {
-    jwt.verify(token, process.env.PASSPORTSECRET, (err, decoded) => {
-      if (err) return res.json({
+    console.log("Token");
+    
+
+    jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+      console.log(err);
+      if (err) {
+        console.log("if err is working");
+        return res.json({
         isLoggedIn: false,
         message: "Failed To Authenticate"
       })
+    }
       req.user = {};
       req.user.id = decoded.id
       req.user.username = decoded.username
