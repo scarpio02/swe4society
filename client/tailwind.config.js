@@ -1,5 +1,5 @@
 module.exports = {
-    content: ['./**/*.{js,jsx,ts,tsx}', './public/index.html'],
+    content: ['./src/**/*.{js,jsx,ts,tsx}', './public/index.html'],
     options: {
       safelist: ['-my-fullscreen', '-my-0']
     },

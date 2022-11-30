@@ -46,7 +46,7 @@ export default function Navbar() {
        <div className="collapse navbar-collapse" id="navbarSupportedContent">
          <ul className="navbar-nav ml-auto">
            <li className="nav-item">
-             {isLoggedIn && <NavLink className="nav-link" to="/register">
+             {isLoggedIn &&  <NavLink className="nav-link" to="/register">
                Register
              </NavLink>}
              {isLoggedIn && <NavLink className="nav-link" to="/login">
