@@ -79,7 +79,7 @@ function Login() {
     }, [history])
 
     return (
-        <div className="text-black flex flex-col h-screen w-screen items-center justify-center">
+        <div className="text-white flex flex-col h-screen w-screen items-center justify-center">
             <div className="p-5 text-3xl font-extrabold">Login</div>
             <form className="mx-5 flex flex-col w-72" onSubmit={(e) => handleLogin(e)}>
                 <label htmlFor="username">Username</label>
