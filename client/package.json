@@ -1,14 +1,23 @@
 {
   "name": "client",
   "version": "0.1.0",
+<<<<<<< HEAD
   "private": true,
   "dependencies": {
     "@tailwindcss/postcss7-compat": "^2.2.17",
+=======
+  "type": "module",
+  "private": true,
+  "dependencies": {
+>>>>>>> 4e471e2ceb9ace7273c01a6b48a94098e03709b7
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "bootstrap": "^5.2.2",
+<<<<<<< HEAD
     "postcss-cli": "^10.1.0",
+=======
+>>>>>>> 4e471e2ceb9ace7273c01a6b48a94098e03709b7
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.4.2",
@@ -38,11 +47,14 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+<<<<<<< HEAD
   },
   "devDependencies": {
     "@craco/craco": "^7.0.0",
     "autoprefixer": "^10.4.13",
     "postcss": "^8.4.19",
     "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.2.17"
+=======
+>>>>>>> 4e471e2ceb9ace7273c01a6b48a94098e03709b7
   }
 }
