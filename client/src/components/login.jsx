@@ -31,7 +31,6 @@ function Login() {
             localStorage.setItem("token", data.token)
             console.log(localStorage.getItem("token"));
             setErrorMessage(data.message)
-
         } catch(err) {
             setErrorMessage(err)
         }
