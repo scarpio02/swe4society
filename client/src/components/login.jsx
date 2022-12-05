@@ -31,6 +31,7 @@ function Login() {
             localStorage.setItem("token", data.token)
             console.log(localStorage.getItem("token"));
             setErrorMessage(data.message)
+
         } catch(err) {
             setErrorMessage(err)
         }
@@ -66,14 +67,15 @@ function Login() {
 
     useLayoutEffect(() => {
         fetch("http://localhost:5000/isUserAuth", {
+            method:"POST",
             headers: {
                 "x-access-token": localStorage.getItem("token")
             }
         })
         .then(res => res.json())
-        .then(data => data.isLoggedIn ? history.push("/dashboard"): null)
+        .then(data => data.isLoggedIn ? history("/"): null)
         .catch(err => {
-            console.log(`${err}`);
+            //console.log(`${err}`);
             setErrorMessage(err);
         })
     }, [history])
@@ -91,6 +93,7 @@ function Login() {
                     <h1>Don't have an account?</h1>
                     <Link className="m-1 px-2 py-1 rounded font-bold text-xl border-2 border-green-400 text-green-400 text-center" to="/register">Register</Link>
                 </div>  
+                {errorMessage === "Success" ? <Navigate to="/"/>: <ValidationError message={errorMessage} />}
                           </form>
                 
             

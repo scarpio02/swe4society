@@ -4,14 +4,20 @@ import React from "react";
 import "bootstrap/dist/css/bootstrap.css";
  
 // We import NavLink to utilize the react router.
-import { NavLink } from "react-router-dom";
- 
+import { Link, NavLink } from "react-router-dom";
+import { useNavigate } from 'react-router'
 import { useLayoutEffect, useState, useEffect } from 'react'
 
 // Here, we display our Navbar
 export default function Navbar() {
-
+  const history = useNavigate()
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [username, setUsername] = useState(null);
+
+  async function logout(e) {
+    localStorage.removeItem("token")
+    await history.push("/login")
+  }
 
   useLayoutEffect(() => {
     fetch("http://localhost:5000/isUserAuth", {
@@ -23,6 +29,8 @@ export default function Navbar() {
     })
     .then(res => res.json())
     .then(data => data.isLoggedIn ? setIsLoggedIn(true): null)
+    .then(data => data.isLoggedIn ? setUsername(data.username): null)
+    .catch(err => alert(err)) 
 }, )
 
  return (
@@ -46,12 +54,12 @@ export default function Navbar() {
        <div className="collapse navbar-collapse" id="navbarSupportedContent">
          <ul className="navbar-nav ml-auto">
            <li className="nav-item">
-             {isLoggedIn &&  <NavLink className="nav-link" to="/register">
+           <NavLink className="nav-link" to="/register">
                Register
-             </NavLink>}
-             {isLoggedIn && <NavLink className="nav-link" to="/login">
+             </NavLink>
+           <NavLink className="nav-link" to="/login">
                Login
-             </NavLink>}
+             </NavLink>
            </li>
          </ul>
        </div>
