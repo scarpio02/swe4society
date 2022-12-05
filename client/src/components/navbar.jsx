@@ -8,6 +8,7 @@ import { Link } from "react-router-dom";
 function Navbar() {
     const history = useNavigate()
     const [username, setUsername] = useState(null)
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
 
     async function logout(e) {
         localStorage.removeItem("token")
@@ -15,12 +16,14 @@ function Navbar() {
     }
 
     useLayoutEffect(() => {
-        fetch("/isUserAuth", {
+        fetch("http://localhost:5000/isUserAuth", {
+            method:"POST",
             headers: {
                 "x-access-token": localStorage.getItem("token")
             }
         })
         .then(res => res.json())
+        .then(data => data.isLoggedIn ? setIsLoggedIn(true): null)
         .then(data => data.isLoggedIn ? setUsername(data.username): null)
         .catch(err => alert(err)) 
     }, [])
@@ -30,9 +33,8 @@ function Navbar() {
         <>
             <section className={`text-white flex flex-col w-screen justify-center items-center sm:hidden fixed transition-all duration-500 -my- z-30 h-screen bg-gray-900`}>
                 <div className="mx-3 text-3xl hover:text-green-300"><Link to="/">Home</Link></div>
-                {username  
+                {isLoggedIn  
                     ? <div className="text-3xl flex flex-col">
-                        <Link to={"/u/" + username} className="my-10 cursor-pointer mx-3 hover:text-green-300">Profile</Link>
                         <div className="cursor-pointer mx-3 hover:text-green-300" onClick={logout}>Logout</div>
                     </div>  
                     : <div className="flex my-10">
@@ -44,9 +46,8 @@ function Navbar() {
             <div className="flex flex-row p-10 justify-end text-2xl text-white">
                 <a href="/" className="mr-auto font-extrabold text-2xl z-50">Better4U</a>
                 <div className="hidden sm:flex mx-3 hover:text-green-300"><Link to="/">Home</Link></div>
-                {username  
+                {isLoggedIn  
                     ? <div className="hidden sm:flex">
-                        <Link to={"/u/" + username} className="cursor-pointer mx-3 hover:text-green-300">Profile</Link>
                         <div className="cursor-pointer mx-3 hover:text-green-300" onClick={logout}>Logout</div>
                     </div>  
                     : <div className="hidden sm:flex">

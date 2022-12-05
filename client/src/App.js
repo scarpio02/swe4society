@@ -1,10 +1,10 @@
 import React from "react";
  
 // We use Route in order to define the different routes of our application
-import { Route, BrowserRouter, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import './index.css'
 // We import all the components we need in our app
-import Navbar from "./components/navbar.js";
+import Navbar from "./components/navbar.jsx";
 // import RecordList from "./components/recordList.js";
 // import Edit from "./components/edit.js";
 
