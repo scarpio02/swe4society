@@ -12,12 +12,14 @@ function Login() {
     async function handleLogin(e) {
         e.preventDefault()
 
+        // User input fields 
         const form = e.target;
         const user = {
             username: form[0].value,
             password: form[1].value
         }
 
+        // Login query call to server
         try {
             console.log(user.username);
             const res = await fetch("http://localhost:5000/login", {
@@ -36,34 +38,7 @@ function Login() {
         }
     }
 
-    //     fetch("http://localhost:5000/login", {
-    //         method: "POST",
-    //         headers: {
-    //             "Content-type": "application/json"
-    //         },
-    //         body: JSON.stringify(user)
-    //     }).then((response) => {
-    //         return response.json();
-    //     })//.then(res => res.json())
-    //     .then(data => {
-    //         localStorage.setItem("token", data.token)
-    //     }).then(result => {
-    //         console.log(result);
-    //         if (result.message === "Success") {
-    //             setSuccessfullyLoggedIn(true);
-    //             setLoginFailed(false);
-    //             form[0].value = "";
-    //             form[1].value = "";
-    //         }
-    //         else {
-    //             setSuccessfullyLoggedIn(false);
-    //             setLoginFailed(true);
-    //             form[0].value = "";
-    //             form[1].value = "";
-    //         }
-    //     })
-    // }
-
+    // Server query call to autheniticate user is logged in
     useLayoutEffect(() => {
         fetch("http://localhost:5000/isUserAuth", {
             method:"POST",
@@ -79,6 +54,7 @@ function Login() {
         })
     }, [history])
 
+    // Frontend rendering
     return (
         <div className="text-white flex flex-col h-screen w-screen items-center justify-center">
             <div className="p-5 text-3xl font-extrabold">Login</div>
@@ -97,25 +73,6 @@ function Login() {
                 
             
         </div>
-
-        //{errorMessage === "Success" ? <Navigate to="/"/>: <ValidationError message={errorMessage} />}
-
-        // <form onSubmit={event => handleLogin(event)}>
-        //     <input required type="text"/>
-        //     <input required type="password"/>
-        //     <input type="submit" value="Submit"/>
-        //     {successfullyLoggedIn &&
-        //         <p>
-        //         Login Successful!
-        //         </p> 
-        //     }
-        //     {loginFailed &&
-        //         <p>
-        //         Invalid Username or Password.
-        //         </p> 
-        //     }
-
-        // </form>
     )
 }
 
