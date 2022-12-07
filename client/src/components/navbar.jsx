@@ -11,6 +11,7 @@ function Navbar() {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
 
     async function logout(e) {
+        //logout function - when user logs out, login button will appear
         localStorage.removeItem("token")
         await history.push("/login")
     }
@@ -31,6 +32,9 @@ function Navbar() {
 
     return (
         <>
+        //setting navbar style attributes and printing Home, Search, Logout (or login), and Register to screen.
+        //Login links to login page when clicked
+        //Logout logs user out of site when clicked
             <section className={`text-white flex flex-col w-screen justify-center items-center sm:hidden fixed transition-all duration-500 -my- z-30 h-screen bg-gray-900`}>
                 <div className="mx-3 text-3xl hover:text-green-300"><Link to="/">Home</Link></div>
                 <div className="mx-3 text-3xl hover:text-green-300"><Link to="/get">Search</Link></div>
@@ -44,6 +48,7 @@ function Navbar() {
                     </div>
                 }
             </section>
+            //Styling and printing Logo, Home, Search, and Logout when user is logged in. Login and Register is set to hidden
             <div className="flex flex-row p-10 justify-end text-2xl text-white">
                 <a href="/" className="mr-auto font-extrabold text-2xl z-50">Better4U</a>
                 <div className="hidden sm:flex mx-3 hover:text-green-300"><Link to="/">Home</Link></div>
@@ -61,22 +66,5 @@ function Navbar() {
         </>
     )
 }
-//     return (
-//         <div>
-//             <Link to="/">Home</Link>
-//             {username
-//                 ? <div>
-//                     <Link to={"/u/" + username}>Profile</Link>
-//                     <div onClick={logout}>Logout</div>
-//                  </div>
-//                 : <div>
-//                     <Link to="/login">Login</Link>
-//                     <Link to="/register">Register</Link>
-//                 </div>
-
-//             }
-//         </div>
-//     )
-// }
 
 export default Navbar;
