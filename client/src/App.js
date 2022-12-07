@@ -10,6 +10,7 @@ import Navbar from "./components/navbar.jsx";
 
 import Register from "./components/register.jsx";
 import Login from "./components/login.jsx";
+import Get from "./components/get.jsx";
  
 const App = () => {
  return (
@@ -29,6 +30,7 @@ const App = () => {
        <Route exact path="/" />
        <Route path="/register" element={<Register />} />
        <Route path="/login" element={<Login />} />
+       <Route path="/get" element={<Get />} />
      </Routes>
    </div>
  );

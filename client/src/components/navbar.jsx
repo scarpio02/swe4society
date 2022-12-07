@@ -33,6 +33,7 @@ function Navbar() {
         <>
             <section className={`text-white flex flex-col w-screen justify-center items-center sm:hidden fixed transition-all duration-500 -my- z-30 h-screen bg-gray-900`}>
                 <div className="mx-3 text-3xl hover:text-green-300"><Link to="/">Home</Link></div>
+                <div className="mx-3 text-3xl hover:text-green-300"><Link to="/get">Search</Link></div>
                 {isLoggedIn  
                     ? <div className="text-3xl flex flex-col">
                         <div className="cursor-pointer mx-3 hover:text-green-300" onClick={logout}>Logout</div>
@@ -46,6 +47,7 @@ function Navbar() {
             <div className="flex flex-row p-10 justify-end text-2xl text-white">
                 <a href="/" className="mr-auto font-extrabold text-2xl z-50">Better4U</a>
                 <div className="hidden sm:flex mx-3 hover:text-green-300"><Link to="/">Home</Link></div>
+                <div className="hidden sm:flex mx-3 hover:text-green-300"><Link to="/get">Search</Link></div>
                 {isLoggedIn  
                     ? <div className="hidden sm:flex">
                         <div className="cursor-pointer mx-3 hover:text-green-300" onClick={logout}>Logout</div>
