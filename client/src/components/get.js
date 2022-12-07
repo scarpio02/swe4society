@@ -25,43 +25,90 @@ async function getData() {
 }
 var info = await getData().then(data => {return (data).foods} )
 var nutritionInfo = await getData().then(data => {return (data).foods} )
-//console.log(nutritionInfo[0].foodNutrients)
 
+//Create map of nutrient info
 var resultsMap = new Map()
-
-//console.log(Object.keys(info).length)
-//console.log(typeof nutritionInfo[0])
-
 for(let i = 0; i < Object.keys(info).length; i++)
 {
 	var nutritionDict = []
 	var nutrients = nutritionInfo[i].foodNutrients
-	//console.log(nutrients)
 	for(let j = 0; j < 10; j++)
 	{
-		//console.log(nutrients[j])
 		nutritionDict.push({Nutrient : nutrients[j].nutrientName, Grams :  nutrients[j].value})
 	}
-	//console.log(typeof nutritionDict)
-	//console.log(info[i].description)
-	//console.log(nutritionDict)
+
 	resultsMap.set(info[i].brandName +', '+ info[i].description,nutritionDict)
-	//console.log(resultsMap.get(info[i].description))
-	//console.log(resultsMap.get(info[i].description))
-	//nutritionDict.length = 0
+
 }
-//console.log(nutritionDict)
-//console.log(info[i].description)
-console.log(resultsMap)//.get(info[0].description))
-//console.log(resultsMap.values())
+
+console.log(resultsMap)
+console.log("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
+
+//Create new 'simpler' map
+var resultsMap2 = new Map()
+for(let i = 0; i < Object.keys(info).length; i++)
+{
+	var nutritionDict = {}
+	var nutrients = nutritionInfo[i].foodNutrients
+	for(let j = 0; j < 10; j++)
+	{
+        var nutrient;
+        var value;
+        nutrient = ((nutrients[j].nutrientName).split(' ')[0]).split(',')[0]
+        value = nutrients[j].value
+		nutritionDict[nutrient] = value   
+	}
+	resultsMap2.set(info[i].brandName +', '+ info[i].description,nutritionDict)
+}
 
 
-//Stripping the brand name when searching for alts (can do 2 text boxes)
-//Parsing out specific nutrients
-//Printing to the console: Dietz and Watson Provolone Cheese, Protein: 26, Fat: 28
+//Set variables for sorting
+var max = -1
+var min = 99999999
+var maxName
+var minName
 
-//Store the objects/whatever in a map
-//Either sort the map or find top alternative, 2nd alt, 3rd alt -> Return those
+//Sorting checks to call sepcific functions
+var sortCriteria = "Protein" //1 for most 2 for least
+var order = 'ascending'
+var sortedMap = new Map()
+function sorter(sortCrtiteria,order)
+{
+	if(order == 'descending')
+	{
+		for(let i = 0; i <5; i++)
+	{
+		max = -1
+		resultsMap2.forEach(function(value, key) {
+		if(value[sortCriteria] > max)
+		{
+			max = value[sortCriteria]
+			maxName = key
+		}
+		})
+		sortedMap.set(maxName,resultsMap2.get(maxName))
+		//console.log("MAX IS: " + maxName + " = " + max)
+		resultsMap2.delete(maxName)
+	}
+	}
+	else if(order == 'ascending')
+	{
+		for(let i = 0; i <5; i++)
+	{
+		min = 9999999
+		resultsMap2.forEach(function(value, key) {
+		if(value[sortCriteria] < min)
+		{
+			min = value[sortCriteria]
+			minName = key
+		}
+		})
+		sortedMap.set(minName,resultsMap2.get(minName))
+		//console.log("MIN IS: " + minName + " = " + min)
+		resultsMap2.delete(minName)
+	}
+	}
+}
+sorter(sortCriteria,order)
+console.log(sortedMap)
 
-//Storing/Sorting -> Storing in a datastructure
-//Input -> the params
