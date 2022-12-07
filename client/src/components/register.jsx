@@ -12,6 +12,7 @@ export function Register() {
     async function handleRegister(e) {
         e.preventDefault()
 
+        // User input fields
         const form = e.target;
         const user = {
             username: form[0].value,
@@ -19,6 +20,7 @@ export function Register() {
             confirmPassword: form[2].value
         }
 
+        // Server query call for user registration
         try {
             const res = await fetch("http://localhost:5000/register", {
                 method: "POST",
@@ -34,31 +36,7 @@ export function Register() {
         }
     }
 
-    //     fetch("http://localhost:5000/register", {
-    //         method: "POST",
-    //         headers: {
-    //             "Content-type": "application/json"
-    //         },
-    //         body: JSON.stringify(user)
-    //     }).then((response) => {
-    //         return response.json();
-    //     }).then(result => {
-    //         console.log(result);
-    //         if (result.message === "Success") {
-    //             setSuccessfullyRegistered(true);
-    //             setRegistrationFailed(false);
-    //             form[0].value = "";
-    //             form[1].value = "";
-    //         }
-    //         else {
-    //             setSuccessfullyRegistered(false);
-    //             setRegistrationFailed(true);
-    //             form[0].value = "";
-    //             form[1].value = "";
-    //         }
-    //     })
-    // }
-
+    // Query call to server to authenticate that user is logged in
     useLayoutEffect(() => {
         fetch("http://localhost:5000/isUserAuth", {
             method:"POST",
@@ -71,23 +49,8 @@ export function Register() {
         .then(data => data.isLoggedIn ? history("/"): null)
     }, [history])
 
+    // Frontend rendering
     return (
-        // <form onSubmit={event => handleRegister(event)}>
-        //     <input required type="text"/>
-        //     <input required type="password"/>
-        //     <input type="submit" value="Submit"/>
-        //     {successfullyRegistered &&
-        //         <p>
-        //         You registered!
-        //         </p> 
-        //     }
-        //     {registrationFailed &&
-        //         <p>
-        //         Username has already been taken.
-        //         </p> 
-        //     }
-        // </form>
-
         <div className="text-white flex flex-col h-screen w-screen items-center justify-center">
         <div className="p-5 text-3xl font-extrabold">Register</div>
         <form className="mx-5 flex flex-col w-72" onSubmit={(e) => handleRegister(e)}>
