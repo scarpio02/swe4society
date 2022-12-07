@@ -1,3 +1,5 @@
+// THIS COMPONENT IS CURRENTLY NOT USED
+
 import React, { useState } from "react";
 import { useNavigate } from "react-router";
  
