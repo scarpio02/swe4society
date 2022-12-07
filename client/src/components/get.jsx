@@ -1,27 +1,27 @@
-// const express = require('express')
-// const router = express.Router();
-// const foodpost = require('../modles/modelpost');
+//import of fetch, a function that allows API connection and return available
 import fetch from "node-fetch";//require("node-fetch");
-//import App from './app.jsx'
+//react allows us to use react library and components
 import React from "react";
  
 // We import bootstrap to make our application look better.
 import "bootstrap/dist/css/bootstrap.css";
  
 // We import NavLink to utilize the react router.
+// importing specific componenets from react library for use later
 import { Link, NavLink } from "react-router-dom";
 import { useNavigate } from 'react-router'
 import { useLayoutEffect, useState, useEffect } from 'react'
 import { GetNutrientInfo } from "./get.mjs"
 
+//get function is function that gathers sorted map and displays it
 function Get() {
 	console.log('Hello')
 	const history = useNavigate()
-	// const [isLoggedIn, setIsLoggedIn] = useState(false);
-	// const [username, setUsername] = useState(null);
+	//sets use states for later use of sorted map and the nutrition map
 	const [sortedMap, setSortedMap] = useState(new Map([]));
 	const [nutrition, setNutrition] = useState(<p></p>);
 
+	//this function test the current user token to determine if they are authorized to access the use of the functions below
 	useLayoutEffect(() => {
 		fetch("http://localhost:5000/isUserAuth", {
 			method:"POST",
@@ -36,10 +36,12 @@ function Get() {
 		.catch(err => alert(err)) 
 	}, )
 
-
+	//this displays the sorted array entries
 	useEffect(() => {
 		console.log(Array.from(sortedMap.entries()));
+		//converting map to array for easier print
 		const mapToArray = Array.from(sortedMap.entries());
+		//this render function is where the new array is actually printed
 		let newRender = mapToArray.map(([key, value]) => 
 			<>
 			<ul key={key}>{key}</ul>
@@ -48,6 +50,7 @@ function Get() {
 			</>
 		);
 		console.log(newRender);
+	//this sets the previously defined use state to what is now the new render defined in the layout
 	setNutrition(newRender)
 }, [sortedMap])
 
@@ -55,7 +58,7 @@ function Get() {
 		e.preventDefault()
 
         const form = e.target;
-		
+		//these are the query parameteres given to the API including Key and products wanted 
 		const params = {
 			api_key: 'adGOkaniwDcX5OGdQwBKtAG4NnaCknGEsJrpcCX5',
 			query: form[0].value,
@@ -67,7 +70,8 @@ function Get() {
 		setSortedMap(testmap);
 	}
 
-
+	//this is the actual output of the screen
+	//including new render of sorted products
 	return(
 		<div className="text-white flex flex-col h-screen-300 w-screen items-center">
 			<div className="p-3 text-3xl font-extrabold">Search Food</div>
